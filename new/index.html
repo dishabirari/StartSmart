@@ -41,7 +41,7 @@
             50% { opacity: 0; }
         }
         /* Custom styles for Calibri Light */
-        #educationInput, #semesterInput, #interestInput, #skillsInput {
+        #educationInput, #semesterInput, #interestInput, #skillsInput, #skillsFutureInput {
             font-family: 'Calibri Light', 'Inter', sans-serif;
         }
     </style>
@@ -168,6 +168,27 @@
                 </div>
             </div>
             <button id="nextButtonSkills" disabled class="w-full bg-emerald-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                Next
+            </button>
+        </form>
+    </div>
+
+    <!-- Page 6: User Input Form - Learning Skills -->
+    <div id="page6" class="page-section">
+        <form id="learningSkillsForm" class="w-full max-w-xl p-8">
+            <div class="mb-6">
+                <h2 class="text-gray-500 text-3xl font-semibold mb-2 text-center">
+                    Enter skills
+                </h2>
+                <h3 class="text-gray-500 text-lg font-semibold mb-6 text-center">
+                    Skills interested to learn in future?
+                </h3>
+                <div class="relative border-b border-gray-400 py-2 mb-6 text-center">
+                    <span id="blinkingTextSkillsFuture" class="absolute inset-0 flex items-center justify-center w-full text-gray-300 font-light text-xl blinking-animation"></span>
+                    <input type="text" id="skillsFutureInput" class="w-full text-center text-4xl font-bold bg-transparent outline-none border-none focus:outline-none focus:ring-0 text-black">
+                </div>
+            </div>
+            <button id="finishButton" disabled class="w-full bg-emerald-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
                 Finish
             </button>
         </form>
@@ -179,12 +200,14 @@
         const nextButtonSem = document.getElementById('nextButtonSem');
         const nextButtonInterest = document.getElementById('nextButtonInterest');
         const nextButtonSkills = document.getElementById('nextButtonSkills');
+        const finishButton = document.getElementById('finishButton');
         
         const page1 = document.getElementById('page1');
         const page2 = document.getElementById('page2');
         const page3 = document.getElementById('page3');
         const page4 = document.getElementById('page4');
         const page5 = document.getElementById('page5');
+        const page6 = document.getElementById('page6');
 
         const blinkingText = document.getElementById('blinkingText');
         const educationInput = document.getElementById('educationInput');
@@ -197,6 +220,9 @@
         
         const blinkingTextSkills = document.getElementById('blinkingTextSkills');
         const skillsInput = document.getElementById('skillsInput');
+
+        const blinkingTextSkillsFuture = document.getElementById('blinkingTextSkillsFuture');
+        const skillsFutureInput = document.getElementById('skillsFutureInput');
 
         let educationField = '';
 
@@ -223,6 +249,12 @@
             "electrical engineering": ["MATLAB", "PSpice", "Multisim", "Arduino"],
             "computer science and engineering": ["Java", "Python", "Android Studio", "C++"],
             "mechanical engineering": ["SolidWorks", "Fusion 360", "MATLAB", "Ansys"]
+        };
+        const learningSkillsMap = {
+            "civil engineering": ["BIM Software", "Project Management", "Sustainable Design", "Geotechnical Analysis"],
+            "electrical engineering": ["Embedded Systems", "Robotics", "Control Systems", "Machine Learning"],
+            "computer science and engineering": ["SQL", "Django", "Node.js", "HTML, CSS, JavaScript"],
+            "mechanical engineering": ["3D Printing", "FEA Analysis", "Fluid Dynamics", "Thermodynamics"]
         };
 
         let blinkingInterval;
@@ -268,6 +300,12 @@
             event.preventDefault();
             const skills = skillsMap[educationField] || ["Research", "Problem-Solving", "Teamwork"];
             clearAndTransition(page4, page5, blinkingTextSkills, skillsInput, skills);
+        });
+
+        nextButtonSkills.addEventListener('click', function(event) {
+            event.preventDefault();
+            const skillsFuture = learningSkillsMap[educationField] || ["New Technology", "AI/ML", "Data Science"];
+            clearAndTransition(page5, page6, blinkingTextSkillsFuture, skillsFutureInput, skillsFuture);
         });
         
         // Input listeners
@@ -318,6 +356,19 @@
                 const skills = skillsMap[educationField] || ["Research", "Problem-Solving", "Teamwork"];
                 blinkingInterval = updateBlinkingText(skills, blinkingTextSkills);
                 nextButtonSkills.disabled = true;
+            }
+        });
+        
+        skillsFutureInput.addEventListener('input', function() {
+            if (this.value.trim().length > 0) {
+                clearInterval(blinkingInterval);
+                blinkingTextSkillsFuture.style.display = 'none';
+                finishButton.disabled = false;
+            } else {
+                blinkingTextSkillsFuture.style.display = 'flex';
+                const skillsFuture = learningSkillsMap[educationField] || ["New Technology", "AI/ML", "Data Science"];
+                blinkingInterval = updateBlinkingText(skillsFuture, blinkingTextSkillsFuture);
+                finishButton.disabled = true;
             }
         });
         
