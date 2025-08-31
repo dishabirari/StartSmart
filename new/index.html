@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Finder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Light greenish background */
+            transition: background-color 0.5s ease;
+        }
+        .page-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 1.5rem;
+        }
+        .page-section.active {
+            display: flex;
+            animation: fadeIn 0.7s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Page 1: Landing Page -->
+    <div id="page1" class="page-section active">
+        <div class="flex flex-col items-center justify-center">
+            <h1 class="text-6xl md:text-8xl font-bold mb-4">
+                <span class="text-black">Project</span><span class="text-emerald-600">Finder</span>
+            </h1>
+            <p class="text-lg md:text-xl font-medium max-w-xl mx-auto mb-8 text-gray-600">
+                Here you can find and explore projects.
+            </p>
+            <button id="startButton" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50">
+                Start
+            </button>
+        </div>
+        
+        <!-- The how it works section -->
+        <div class="p-8 md:p-16 mt-16 max-w-7xl">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-700">How It Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mx-auto">
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-emerald-600 mb-4">1. Shape Your Professional Story</h3>
+                    <p class="text-gray-600">Start by telling us about your background and interests to help us find the perfect projects for you.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-emerald-600 mb-4">2. Explore Project Possibilities</h3>
+                    <p class="text-gray-600">We'll show you a curated list of projects that align with your skills and goals. It's time to explore!</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-emerald-600 mb-4">3. Take the Next Step</h3>
+                    <p class="text-gray-600">Found a project you like? Connect with the creators and take the next step toward building your portfolio.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- About the website section -->
+        <div class="p-8 md:p-16 bg-gray-100 w-full mt-16">
+            <div class="max-w-5xl mx-auto text-center">
+                <h2 class="text-4xl font-bold text-gray-700 mb-8">About the Website</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    ProjectFinder is designed to connect aspiring professionals with meaningful projects. Whether you're looking to build your skills, collaborate with others, or find inspiration, our platform is here to help you take your career to the next level.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: User Input Form -->
+    <div id="page2" class="page-section">
+        <form id="educationForm" class="w-full max-w-xl p-8 bg-white rounded-xl shadow-lg">
+            <div class="mb-6">
+                <label for="educationField" class="block text-gray-700 text-3xl font-semibold mb-6 text-center">
+                    Enter Your Current Education Field
+                </label>
+                <div class="relative">
+                    <select id="educationField" name="educationField" class="block appearance-none w-full bg-white border border-gray-300 text-gray-800 text-xl font-bold py-4 px-6 pr-8 rounded-md leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="" disabled selected>Select your field</option>
+                        <option value="Civil Engineering">Civil Engineering</option>
+                        <option value="Electrical Engineering">Electrical Engineering</option>
+                        <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700">
+                        <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+            </div>
+            <button id="nextButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50">
+                Next
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+
+        startButton.addEventListener('click', function() {
+            page1.classList.remove('active');
+            page1.style.display = 'none';
+            
+            page2.classList.add('active');
+        });
+    </script>
+</body>
+</html>
