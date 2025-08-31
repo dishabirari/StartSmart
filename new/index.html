@@ -41,7 +41,7 @@
             50% { opacity: 0; }
         }
         /* Custom styles for Calibri Light */
-        #educationInput, #semesterInput, #interestInput {
+        #educationInput, #semesterInput, #interestInput, #skillsInput {
             font-family: 'Calibri Light', 'Inter', sans-serif;
         }
     </style>
@@ -151,17 +151,40 @@
             </button>
         </form>
     </div>
+    
+    <!-- Page 5: User Input Form - Skills -->
+    <div id="page5" class="page-section">
+        <form id="skillsForm" class="w-full max-w-xl p-8">
+            <div class="mb-6">
+                <h2 class="text-gray-500 text-3xl font-semibold mb-2 text-center">
+                    Enter skills
+                </h2>
+                <h3 class="text-gray-500 text-lg font-semibold mb-6 text-center">
+                    Already known skills?
+                </h3>
+                <div class="relative border-b border-gray-400 py-2 mb-6 text-center">
+                    <span id="blinkingTextSkills" class="absolute inset-0 flex items-center justify-center w-full text-gray-300 font-light text-xl blinking-animation"></span>
+                    <input type="text" id="skillsInput" class="w-full text-center text-4xl font-bold bg-transparent outline-none border-none focus:outline-none focus:ring-0 text-black">
+                </div>
+            </div>
+            <button id="nextButtonSkills" disabled class="w-full bg-emerald-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                Finish
+            </button>
+        </form>
+    </div>
 
     <script>
         const startButton = document.getElementById('startButton');
         const nextButton = document.getElementById('nextButton');
         const nextButtonSem = document.getElementById('nextButtonSem');
         const nextButtonInterest = document.getElementById('nextButtonInterest');
+        const nextButtonSkills = document.getElementById('nextButtonSkills');
         
         const page1 = document.getElementById('page1');
         const page2 = document.getElementById('page2');
         const page3 = document.getElementById('page3');
         const page4 = document.getElementById('page4');
+        const page5 = document.getElementById('page5');
 
         const blinkingText = document.getElementById('blinkingText');
         const educationInput = document.getElementById('educationInput');
@@ -171,6 +194,9 @@
         
         const blinkingTextInterest = document.getElementById('blinkingTextInterest');
         const interestInput = document.getElementById('interestInput');
+        
+        const blinkingTextSkills = document.getElementById('blinkingTextSkills');
+        const skillsInput = document.getElementById('skillsInput');
 
         let educationField = '';
 
@@ -191,6 +217,12 @@
             "electrical engineering": ["Power Systems", "Electronics", "Telecommunications", "Renewable Energy"],
             "computer science and engineering": ["Software Development", "Web Development", "App Development", "Cloud Computing"],
             "mechanical engineering": ["Automotive Engineering", "Robotics", "Aerospace Engineering", "CAD Design"]
+        };
+        const skillsMap = {
+            "civil engineering": ["AutoCAD", "Revit", "SAP2000", "GIS"],
+            "electrical engineering": ["MATLAB", "PSpice", "Multisim", "Arduino"],
+            "computer science and engineering": ["Java", "Python", "Android Studio", "C++"],
+            "mechanical engineering": ["SolidWorks", "Fusion 360", "MATLAB", "Ansys"]
         };
 
         let blinkingInterval;
@@ -232,6 +264,12 @@
             clearAndTransition(page3, page4, blinkingTextInterest, interestInput, interests);
         });
         
+        nextButtonInterest.addEventListener('click', function(event) {
+            event.preventDefault();
+            const skills = skillsMap[educationField] || ["Research", "Problem-Solving", "Teamwork"];
+            clearAndTransition(page4, page5, blinkingTextSkills, skillsInput, skills);
+        });
+        
         // Input listeners
         educationInput.addEventListener('input', function() {
             if (this.value.trim().length > 0) {
@@ -269,8 +307,20 @@
                 nextButtonInterest.disabled = true;
             }
         });
+
+        skillsInput.addEventListener('input', function() {
+            if (this.value.trim().length > 0) {
+                clearInterval(blinkingInterval);
+                blinkingTextSkills.style.display = 'none';
+                nextButtonSkills.disabled = false;
+            } else {
+                blinkingTextSkills.style.display = 'flex';
+                const skills = skillsMap[educationField] || ["Research", "Problem-Solving", "Teamwork"];
+                blinkingInterval = updateBlinkingText(skills, blinkingTextSkills);
+                nextButtonSkills.disabled = true;
+            }
+        });
         
     </script>
 </body>
 </html>
-
