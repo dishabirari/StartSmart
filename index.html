@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Finder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Light greenish background */
+            overflow: hidden; /* Hide overflow to prevent scroll during transition */
+        }
+        .animate-fade-in {
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .transition-opacity-transform {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .input-blinker {
+            animation: blinker 2.5s infinite;
+        }
+        @keyframes blinker {
+            0%, 40% { opacity: 1; }
+            50% { opacity: 0; }
+            60%, 100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- The top section of the homepage -->
+    <div id="homepage" class="flex flex-col items-center justify-center min-h-screen p-6 text-center transition-opacity-transform duration-700 ease-in-out">
+        <h1 class="text-6xl md:text-8xl font-bold mb-4">
+            <span class="text-black">Project</span><span class="text-emerald-600">Finder</span>
+        </h1>
+        <p class="text-lg md:text-xl font-medium max-w-xl mx-auto mb-8 text-gray-600">
+            Here you can find and explore projects.
+        </p>
+        <button id="startButton" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50">
+            Start
+        </button>
+    </div>
+
+    <!-- The user input form section (initially hidden) -->
+    <div id="inputFormSection" class="fixed inset-0 hidden flex-col items-center justify-center p-6 text-center bg-f0fdf4 transition-opacity-transform duration-700 ease-in-out">
+        <form id="educationForm" class="w-full max-w-xl p-8">
+            <div class="mb-6">
+                <label for="educationField" class="block text-gray-700 text-2xl mb-2 text-center">
+                    share a current education field:
+                </label>
+                <div class="relative">
+                    <span id="blinkingText" class="absolute left-0 top-0 w-full text-center text-3xl font-bold text-gray-500 transition-opacity-transform opacity-100 pointer-events-none"></span>
+                    <input id="educationField" name="educationField" type="text" placeholder="" class="block w-full bg-transparent border-b-2 border-gray-400 text-gray-800 text-3xl font-bold py-3 px-4 leading-tight focus:outline-none focus:border-emerald-500 text-center">
+                </div>
+            </div>
+            <button id="nextButton" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50">
+                Next
+            </button>
+        </form>
+    </div>
+    
+    <script>
+        const startButton = document.getElementById('startButton');
+        const homepage = document.getElementById('homepage');
+        const inputFormSection = document.getElementById('inputFormSection');
+        const educationField = document.getElementById('educationField');
+        const blinkingText = document.getElementById('blinkingText');
+        
+        const options = ["Civil Engineering", "Electrical Engineering", "Computer Science and Engineering", "Mechanical Engineering"];
+        let optionIndex = 0;
+
+        // Function to update the blinking text
+        function updateBlinkingText() {
+            blinkingText.textContent = options[optionIndex];
+            optionIndex = (optionIndex + 1) % options.length;
+        }
+
+        let blinkingInterval = null;
+
+        startButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            // Hide the homepage and show the input form section
+            homepage.classList.add('hidden');
+            inputFormSection.classList.remove('hidden');
+            
+            // Start the blinking animation
+            updateBlinkingText();
+            blinkingInterval = setInterval(updateBlinkingText, 2500); // Change text every 2.5 seconds
+        });
+
+        // Hide blinking text when the input is focused
+        educationField.addEventListener('focus', function() {
+            clearInterval(blinkingInterval);
+            blinkingText.style.opacity = '0';
+        });
+
+        // Show blinking text when the input is blurred and empty
+        educationField.addEventListener('blur', function() {
+            if (educationField.value.trim() === '') {
+                blinkingInterval = setInterval(updateBlinkingText, 2500);
+                blinkingText.style.opacity = '1';
+            }
+        });
+    </script>
+</body>
+</html>
