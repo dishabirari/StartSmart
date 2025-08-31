@@ -41,7 +41,7 @@
             50% { opacity: 0; }
         }
         /* Custom styles for Calibri Light */
-        #educationInput, #semesterInput {
+        #educationInput, #semesterInput, #interestInput {
             font-family: 'Calibri Light', 'Inter', sans-serif;
         }
     </style>
@@ -131,20 +131,48 @@
         </form>
     </div>
 
+    <!-- Page 4: User Input Form - Interests -->
+    <div id="page4" class="page-section">
+        <form id="interestsForm" class="w-full max-w-xl p-8">
+            <div class="mb-6">
+                <h2 class="text-gray-500 text-3xl font-semibold mb-2 text-center">
+                    Enter your interests
+                </h2>
+                <h3 class="text-gray-500 text-lg font-semibold mb-6 text-center">
+                    Enter your area of interest?
+                </h3>
+                <div class="relative border-b border-gray-400 py-2 mb-6 text-center">
+                    <span id="blinkingTextInterest" class="absolute inset-0 flex items-center justify-center w-full text-gray-300 font-light text-xl blinking-animation"></span>
+                    <input type="text" id="interestInput" class="w-full text-center text-4xl font-bold bg-transparent outline-none border-none focus:outline-none focus:ring-0 text-black">
+                </div>
+            </div>
+            <button id="nextButtonInterest" disabled class="w-full bg-emerald-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                Next
+            </button>
+        </form>
+    </div>
+
     <script>
         const startButton = document.getElementById('startButton');
         const nextButton = document.getElementById('nextButton');
         const nextButtonSem = document.getElementById('nextButtonSem');
+        const nextButtonInterest = document.getElementById('nextButtonInterest');
         
         const page1 = document.getElementById('page1');
         const page2 = document.getElementById('page2');
         const page3 = document.getElementById('page3');
+        const page4 = document.getElementById('page4');
 
         const blinkingText = document.getElementById('blinkingText');
         const educationInput = document.getElementById('educationInput');
         
         const blinkingTextSem = document.getElementById('blinkingTextSem');
         const semesterInput = document.getElementById('semesterInput');
+        
+        const blinkingTextInterest = document.getElementById('blinkingTextInterest');
+        const interestInput = document.getElementById('interestInput');
+
+        let educationField = '';
 
         const fields = [
             "Civil Engineering",
@@ -158,9 +186,12 @@
             "SEM III",
             "SEM IV"
         ];
-
-        let fieldIndex = 0;
-        let semIndex = 0;
+        const interestsMap = {
+            "civil engineering": ["Structural Design", "Urban Planning", "Environmental Engineering", "Transportation"],
+            "electrical engineering": ["Power Systems", "Electronics", "Telecommunications", "Renewable Energy"],
+            "computer science and engineering": ["Software Development", "Web Development", "App Development", "Cloud Computing"],
+            "mechanical engineering": ["Automotive Engineering", "Robotics", "Aerospace Engineering", "CAD Design"]
+        };
 
         let blinkingInterval;
 
@@ -173,27 +204,34 @@
             }, 1500);
         }
 
+        function clearAndTransition(currentPage, nextPage, blinkingElement, nextInput, textArray) {
+            currentPage.classList.remove('active');
+            currentPage.style.display = 'none';
+            nextPage.classList.add('active');
+            if (blinkingInterval) {
+                clearInterval(blinkingInterval);
+            }
+            blinkingInterval = updateBlinkingText(textArray, blinkingElement);
+            nextInput.focus();
+        }
+
         // Start page transitions
         startButton.addEventListener('click', function() {
-            page1.classList.remove('active');
-            page1.style.display = 'none';
-            page2.classList.add('active');
-            blinkingInterval = updateBlinkingText(fields, blinkingText);
-            educationInput.focus();
+            clearAndTransition(page1, page2, blinkingText, educationInput, fields);
         });
 
         nextButton.addEventListener('click', function(event) {
             event.preventDefault();
-            page2.classList.remove('active');
-            page2.style.display = 'none';
-            page3.classList.add('active');
-            if (blinkingInterval) {
-                clearInterval(blinkingInterval);
-            }
-            blinkingInterval = updateBlinkingText(semesters, blinkingTextSem);
-            semesterInput.focus();
+            educationField = educationInput.value.trim().toLowerCase();
+            clearAndTransition(page2, page3, blinkingTextSem, semesterInput, semesters);
         });
-
+        
+        nextButtonSem.addEventListener('click', function(event) {
+            event.preventDefault();
+            const interests = interestsMap[educationField] || ["General Interest", "Innovation", "Research"];
+            clearAndTransition(page3, page4, blinkingTextInterest, interestInput, interests);
+        });
+        
         // Input listeners
         educationInput.addEventListener('input', function() {
             if (this.value.trim().length > 0) {
@@ -218,7 +256,21 @@
                 nextButtonSem.disabled = true;
             }
         });
+
+        interestInput.addEventListener('input', function() {
+            if (this.value.trim().length > 0) {
+                clearInterval(blinkingInterval);
+                blinkingTextInterest.style.display = 'none';
+                nextButtonInterest.disabled = false;
+            } else {
+                blinkingTextInterest.style.display = 'flex';
+                const interests = interestsMap[educationField] || ["General Interest", "Innovation", "Research"];
+                blinkingInterval = updateBlinkingText(interests, blinkingTextInterest);
+                nextButtonInterest.disabled = true;
+            }
+        });
         
     </script>
 </body>
 </html>
+
