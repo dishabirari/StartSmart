@@ -29,6 +29,13 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        .blinking-animation {
+            animation: blink 1.5s linear infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -81,20 +88,12 @@
     <div id="page2" class="page-section">
         <form id="educationForm" class="w-full max-w-xl p-8 bg-white rounded-xl shadow-lg">
             <div class="mb-6">
-                <label for="educationField" class="block text-gray-700 text-3xl font-semibold mb-6 text-center">
+                <h2 class="text-gray-500 text-3xl font-semibold mb-6 text-center">
                     Enter Your Current Education Field
-                </label>
-                <div class="relative">
-                    <select id="educationField" name="educationField" class="block appearance-none w-full bg-white border border-gray-300 text-gray-800 text-xl font-bold py-4 px-6 pr-8 rounded-md leading-tight focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        <option value="" disabled selected>Select your field</option>
-                        <option value="Civil Engineering">Civil Engineering</option>
-                        <option value="Electrical Engineering">Electrical Engineering</option>
-                        <option value="Computer Science and Engineering">Computer Science and Engineering</option>
-                        <option value="Mechanical Engineering">Mechanical Engineering</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700">
-                        <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                    </div>
+                </h2>
+                <div class="relative border-b border-gray-400 py-2 mb-6 text-center">
+                    <span id="blinkingText" class="absolute inset-0 flex items-center justify-center w-full text-gray-300 font-light text-xl blinking-animation"></span>
+                    <input type="text" id="educationInput" class="w-full text-center text-xl font-bold bg-transparent outline-none border-none focus:outline-none focus:ring-0">
                 </div>
             </div>
             <button id="nextButton" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50">
@@ -107,12 +106,47 @@
         const startButton = document.getElementById('startButton');
         const page1 = document.getElementById('page1');
         const page2 = document.getElementById('page2');
+        const blinkingText = document.getElementById('blinkingText');
+        const educationInput = document.getElementById('educationInput');
+        const nextButton = document.getElementById('nextButton');
+
+        const fields = [
+            "Civil Engineering",
+            "Electrical Engineering",
+            "Computer Science and Engineering",
+            "Mechanical Engineering"
+        ];
+        let fieldIndex = 0;
+
+        function updateBlinkingText() {
+            blinkingText.textContent = fields[fieldIndex];
+            fieldIndex = (fieldIndex + 1) % fields.length;
+        }
+
+        let blinkingInterval = setInterval(updateBlinkingText, 1500);
 
         startButton.addEventListener('click', function() {
             page1.classList.remove('active');
             page1.style.display = 'none';
-            
             page2.classList.add('active');
+            updateBlinkingText(); // Start the blinking on page load
+        });
+
+        educationInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                clearInterval(blinkingInterval);
+                blinkingText.style.display = 'none';
+            } else {
+                blinkingText.style.display = 'flex';
+                blinkingInterval = setInterval(updateBlinkingText, 1500);
+            }
+        });
+        
+        // This is a placeholder for the next button's functionality
+        nextButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            console.log("Next button clicked!");
+            // Add logic here to go to the next page
         });
     </script>
 </body>
